@@ -7,7 +7,7 @@ namespace CET2007w3
         public static void Main(string[] args)
         {
             MenuItem[] menu = new MenuItem[2];
-            menu[0] = new Meal("Burger", 1.99m.);, 
+            menu[0] = new Meal("Burger", 1.99m);
             menu[1] = new Drink("Cola", 2.20m, "1L");
 
             foreach (MenuItem item in menu)
