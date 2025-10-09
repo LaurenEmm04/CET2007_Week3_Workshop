@@ -6,7 +6,48 @@ namespace CET2007w3
     {
         public static void Main(string[] args)
         {
-            MenuItem[] menu = new MenuItem[2];
+
+            Console.WriteLine("Hi there! Please choose cash or card payment method.");
+            Console.WriteLine("1. Cash");
+            Console.WriteLine("2. Card");
+            string PaymentMethod = Console.ReadLine();
+
+            Console.WriteLine("Choose how you would like to be notified of payment");
+            Console.WriteLine("1. Email");
+            Console.WriteLine("2. Text message");
+            string Notification = Console.ReadLine();
+
+            Console.WriteLine("Enter item name");
+            string Item = Console.ReadLine();
+
+            Console.WriteLine("Enter the total ammount");
+            double ammount = Convert.ToDouble(Console.ReadLine());
+
+            IPaymentProcessor paymentProcessor;
+            INotifier notifier;
+
+            if (PaymentMethod =="1")
+            {
+                paymentProcessor = new CardPayment();
+            }
+            else
+            {
+                paymentProcessor = new CashPayment();
+            }
+            if (Notification == "1")
+            {
+                notifier = new EmailNotifier();
+            }
+            else
+            {
+                notifier = new TextNotif();
+            }
+
+
+            paymentProcessor.ProcessPayment(ammount, Item);
+            notifier.Notify($"Order has been placed for {Item}. The total is £{ammount:F2}");
+
+                MenuItem[] menu = new MenuItem[2];
             menu[0] = new Meal("Burger", 1.99m);
             menu[1] = new Drink("Cola", 2.20m, "1L");
 
@@ -89,6 +130,49 @@ namespace CET2007w3
             decimal tbftax = Price * quantity;
             decimal totalwtax = tbftax * 1.05m; // 5% tax
             return totalwtax;
+        }
+    }
+
+    interface IPaymentProcessor
+    {
+        void ProcessPayment(double amount, string reference);
+    }
+
+    interface INotifier
+    {
+        void Notify(string message);
+    }
+
+    public class CardPayment : IPaymentProcessor
+    {
+        public void ProcessPayment(double ammount, string reference)
+        {
+            Console.WriteLine($"Card Payment of £{ammount:F2} processed for {reference}");
+        }
+    }
+
+    public class CashPayment : IPaymentProcessor
+    {
+        public void ProcessPayment(double amount, string reference)
+        {
+            Console.WriteLine($"Cash Payment of £{amount:F2} processed for {reference}");
+        }
+    }
+
+
+    public class EmailNotifier : INotifier
+    {
+        public void Notify(string message)
+        {
+            Console.WriteLine($"Email sent: {message}");
+        }
+    }
+
+    public class TextNotif : INotifier
+    {
+        public void Notify(string message)
+        {
+            Console.WriteLine($"Email sent: {message}");
         }
     }
 }
