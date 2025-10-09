@@ -60,6 +60,22 @@ namespace CET2007w3
             MenuItem drink = new Drink("Sprite", 3.20m, "500ml");
             Console.WriteLine("Meal total for 2 people: £" + meal.CalculateTotal(2));
             Console.WriteLine("Drink total for 2: £" + drink.CalculateTotal(2));
+
+            Console.WriteLine("Click to test overloading");
+            Console.ReadKey();
+            Console.Clear();
+
+            MenuItem testMeal = new Meal("Pasta", 8.00m);
+            Checkout checkout = new Checkout();
+
+            decimal total1 = checkout.PlaceOrder(testMeal, 2);  // no discount
+            Console.WriteLine($"Basic total: £{total1:F2}");
+
+            decimal total2 = checkout.PlaceOrder(testMeal, 2, 10);  // 10% discount
+            Console.WriteLine($"With 10% discount: £{total2:F2}");
+
+            decimal total3 = checkout.PlaceOrder(testMeal, 2, 10, 3.50);  // 10% discount + delivery
+            Console.WriteLine($"With 10% discount and £3.50 delivery: £{total3:F2}");
         }
     }
 
@@ -173,6 +189,32 @@ namespace CET2007w3
         public void Notify(string message)
         {
             Console.WriteLine($"Email sent: {message}");
+        }
+    }
+
+    public class Checkout
+    {
+        //no discount applied
+        public decimal PlaceOrder(MenuItem item, int quantity)
+        {
+            return item.CalculateTotal(quantity);
+        }
+
+        //with discount
+        public decimal PlaceOrder(MenuItem item, int quantity, double DiscountPercent)
+        {
+            decimal Total = item.CalculateTotal(quantity);
+            decimal Discount = Total * (decimal)(DiscountPercent / 100);  //gives you a decimall
+            return Total - Discount;
+        }
+
+        //with discount + delivery fee
+        public decimal PlaceOrder(MenuItem item, int quantity, double DiscountPercent, double DeliveryFee)
+        {
+            decimal Total = item.CalculateTotal(quantity);
+            decimal Discount = Total * (decimal)(DiscountPercent / 100);
+            decimal FinalTotal = Total - Discount + (decimal)DeliveryFee;
+            return FinalTotal;
         }
     }
 }
